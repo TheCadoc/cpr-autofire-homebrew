@@ -1,0 +1,21 @@
+{
+  "id": "cpr-autofire-homebrew",
+  "title": "CPR Autofire Homebrew",
+  "description": "Homebrew Autofire rules for Cyberpunk RED. Full Blast: spend double ammunition to add 1 to each damage die before the Autofire multiplier.",
+  "version": "0.1.0",
+  "compatibility": { "minimum": "12", "verified": "12.343", "maximum": "12" },
+  "authors": [{ "name": "Lukasz Dobbek" }],
+  "esmodules": ["scripts/main.js"],
+  "languages": [{ "lang": "en", "name": "English", "path": "lang/en.json" }],
+  "relationships": {
+    "systems": [
+      {
+        "id": "cyberpunk-red-core",
+        "type": "system",
+        "compatibility": { "verified": "0.92.4" }
+      }
+    ],
+    "requires": [{ "id": "lib-wrapper", "type": "module" }]
+  },
+  "url": "https://github.com/TheCadoc/cpr-autofire-homebrew"
+}
