@@ -12,14 +12,14 @@
 
 ## File map
 
-| File                                    | Change                                                                    |
-| --------------------------------------- | ------------------------------------------------------------------------- |
-| `scripts/rules.js`                      | Add `fullBlastFaces(faces)`.                                              |
-| `test/rules.test.js`                    | Tests for `fullBlastFaces`.                                               |
-| `templates/full-blast-damage-card.hbs`  | New wrapper: block helper around CPR's damage card partial.               |
-| `scripts/full-blast.js`                 | Register the helper; swap `rollCard` and set the line in `_computeBase`. |
-| `lang/en.json`                          | `FullBlast.DamageLine`.                                                   |
-| `README.md`                             | Describe the visible line.                                                |
+| File                                   | Change                                                                   |
+| -------------------------------------- | ------------------------------------------------------------------------ |
+| `scripts/rules.js`                     | Add `fullBlastFaces(faces)`.                                             |
+| `test/rules.test.js`                   | Tests for `fullBlastFaces`.                                              |
+| `templates/full-blast-damage-card.hbs` | New wrapper: block helper around CPR's damage card partial.              |
+| `scripts/full-blast.js`                | Register the helper; swap `rollCard` and set the line in `_computeBase`. |
+| `lang/en.json`                         | `FullBlast.DamageLine`.                                                  |
+| `README.md`                            | Describe the visible line.                                               |
 
 Lint and format run from `D:\Antigravity\foundry-cpr`, which ignores `**/.claude/**`. From a worktree, lint the worktree explicitly (Task 4) and rerun the workspace commands in the live clone during live testing.
 

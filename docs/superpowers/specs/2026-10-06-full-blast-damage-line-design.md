@@ -12,9 +12,9 @@ The bonus exists only as the "Full Blast (+1 per die): +8" modifier, which is a 
 
 ## 2. Decision
 
-| #   | Question  | Choice                                                                                                                                                       |
-| --- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 11  | Mechanism | Stored line inside CPR's dice column, above "Autofire! (x4)", rendered by a wrapper template and a Handlebars block helper.                                    |
+| #   | Question  | Choice                                                                                                                                                                                      |
+| --- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 11  | Mechanism | Stored line inside CPR's dice column, above "Autofire! (x4)", rendered by a wrapper template and a Handlebars block helper.                                                                 |
 | 12  | Wording   | `Full Blast! +1 per die ({dice})`, for example `Full Blast! +1 per die (6 + 5)`. Alternatives `Full Blast! (+1 per die)` and `Full Blast: +1 per die (+{bonus})` need only a string change. |
 
 Rejected:
@@ -70,10 +70,10 @@ Data flow: `roll()` calls `_computeBase` (bonus, line, card swap), then `RenderR
 - `npm test` here; `npm run lint` and `npm run format:check` from `foundry-cpr` (the live clone, since the workspace ignores `**/.claude/**`).
 - Live, CPR only (Pneuma disabled), assault rifle:
 
-| #   | Steps                                                            | Expected                                                                                                     | Req      |
-| --- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------- |
+| #   | Steps                                                            | Expected                                                                                                          | Req      |
+| --- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------- |
 | D1  | Full Blast attack, damage from the card, multiplier 4            | Line `Full Blast! +1 per die (a + b)` above "Autofire! (x4)"; a, b are the natural faces + 1; total = (a + b) x 4 | R14, R16 |
-| D2  | Inspect stored `message.content`                                 | Contains the line and the wrapper; `data-total-damage` equals the total                                     | R15, R17 |
-| D3  | Standard Autofire damage, and sheet damage with the box unticked | No line, no wrapper, native card                                                                            | R16, R17 |
-| D4  | Disable the module, reload                                       | The D1 card still shows the line                                                                            | R15      |
-| D5  | Screenshot of D1 for the PR                                      | Visual check of placement and styling                                                                       | R14      |
+| D2  | Inspect stored `message.content`                                 | Contains the line and the wrapper; `data-total-damage` equals the total                                           | R15, R17 |
+| D3  | Standard Autofire damage, and sheet damage with the box unticked | No line, no wrapper, native card                                                                                  | R16, R17 |
+| D4  | Disable the module, reload                                       | The D1 card still shows the line                                                                                  | R15      |
+| D5  | Screenshot of D1 for the PR                                      | Visual check of placement and styling                                                                             | R14      |
