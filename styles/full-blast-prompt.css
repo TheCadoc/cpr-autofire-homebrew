@@ -1,0 +1,41 @@
+/*
+ * Full Blast prompt (DialogV2 with class cpr-autofire-homebrew-prompt).
+ * Fonts and colors come from Cyberpunk RED's --cpr-* variables. The red
+ * frame is CPR's own .cpr-block, set in the dialog content markup.
+ */
+
+/* The stacked footer no longer sets the window width, so give it a floor. */
+.cpr-autofire-homebrew-prompt {
+  min-width: 25rem;
+}
+
+/*
+ * CPR sets its font on .window-content, which misses the title and buttons.
+ * Foundry's title inherits its font, so set it on the header.
+ */
+.cpr-autofire-homebrew-prompt .window-header,
+.cpr-autofire-homebrew-prompt .form-footer button {
+  font-family: var(--cpr-font-primary);
+}
+
+.cpr-autofire-homebrew-prompt .cpr-block {
+  padding: 0.5rem;
+}
+
+/* One full-width button per row, so each label fits on one line. */
+.cpr-autofire-homebrew-prompt .form-footer {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.cpr-autofire-homebrew-prompt .form-footer button {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* Foundry hides a disabled button's border and CPR paints every button the window color. */
+.cpr-autofire-homebrew-prompt .form-footer button:disabled {
+  color: var(--cpr-text-icon-dimmed);
+  background: none;
+  border: 0.125rem dashed var(--cpr-text-icon-dimmed);
+}
