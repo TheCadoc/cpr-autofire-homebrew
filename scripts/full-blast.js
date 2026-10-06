@@ -4,13 +4,13 @@ import {
   fullBlastFaces,
   fullBlastRounds,
 } from "./rules.js";
+import { MARKER_CLASS, MODULE_ID, t } from "./constants.js";
+import { takePneumaFullBlast } from "./pneuma.js";
 
-const MODULE_ID = "cpr-autofire-homebrew";
 const MOD_ID = `${MODULE_ID}-full-blast`;
 const CARD_TEMPLATE = `modules/${MODULE_ID}/templates/full-blast-attack-card.hbs`;
 const DAMAGE_CARD_TEMPLATE = `modules/${MODULE_ID}/templates/full-blast-damage-card.hbs`;
 const LINE_HELPER = "cprAutofireHomebrewDamageLine";
-const MARKER_CLASS = `${MODULE_ID}-full-blast`;
 const LINE_CLASS = `${MARKER_CLASS}-line`;
 const PROMPT_CLASS = `${MODULE_ID}-prompt`;
 const DAMAGE_TYPE = "fullblast";
@@ -20,8 +20,6 @@ const ITEM = "CONFIG.Item.documentClass.prototype";
 const damageRolls = new WeakSet();
 /** Our bulletConsumption replacements, so none is ever wrapped twice. */
 const doubled = new WeakSet();
-
-const t = (key, data) => game.i18n.format(`CPR_AUTOFIRE_HOMEBREW.${key}`, data);
 
 /** Wires Full Blast into Cyberpunk RED. Must run in the init hook. */
 export function register() {
@@ -53,7 +51,12 @@ export function register() {
 }
 
 function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
-  const fullBlast = type === "damage" && extraData?.damageType === DAMAGE_TYPE;
+  // Every damage roll takes any pending Pneuma click, so a stale one never carries over.
+  const pneuma = type === "damage" && takePneumaFullBlast(this, actor);
+  const fullBlast =
+    type === "damage" &&
+    (extraData?.damageType === DAMAGE_TYPE ||
+      (pneuma && extraData?.damageType === "autofire"));
   if (fullBlast) extraData = { ...extraData, damageType: "autofire" };
   const roll = wrapped(type, actor, extraData, ...rest);
   if (
