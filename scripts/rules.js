@@ -32,3 +32,14 @@ export function canFullBlast(loadedRounds, standardRounds) {
 export function fullBlastBonus(diceCount, multiplier) {
   return diceCount * multiplier;
 }
+
+/**
+ * Die values Full Blast counts: each natural face plus 1. For display only;
+ * crits and die images keep the natural faces.
+ *
+ * @param {number[]} faces - natural d6 results
+ * @returns {number[]}
+ */
+export function fullBlastFaces(faces) {
+  return faces.map((face) => face + 1);
+}

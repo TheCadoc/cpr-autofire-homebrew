@@ -1,9 +1,17 @@
-import { canFullBlast, fullBlastBonus, fullBlastRounds } from "./rules.js";
+import {
+  canFullBlast,
+  fullBlastBonus,
+  fullBlastFaces,
+  fullBlastRounds,
+} from "./rules.js";
 
 const MODULE_ID = "cpr-autofire-homebrew";
 const MOD_ID = `${MODULE_ID}-full-blast`;
 const CARD_TEMPLATE = `modules/${MODULE_ID}/templates/full-blast-attack-card.hbs`;
+const DAMAGE_CARD_TEMPLATE = `modules/${MODULE_ID}/templates/full-blast-damage-card.hbs`;
+const LINE_HELPER = "cprAutofireHomebrewDamageLine";
 const MARKER_CLASS = `${MODULE_ID}-full-blast`;
+const LINE_CLASS = `${MARKER_CLASS}-line`;
 const PROMPT_CLASS = `${MODULE_ID}-prompt`;
 const DAMAGE_TYPE = "fullblast";
 const ITEM = "CONFIG.Item.documentClass.prototype";
@@ -39,6 +47,7 @@ export function register() {
     wrapLoadMixins,
     "WRAPPER",
   );
+  Handlebars.registerHelper(LINE_HELPER, insertDamageLine);
   Hooks.on("renderCPRRollDialog", addDamageCheckbox);
   Hooks.on("renderChatMessage", retargetDamageButton);
 }
@@ -130,15 +139,17 @@ function wrapLoadMixins(wrapped, ...args) {
   return result;
 }
 
-/** Adds the Full Blast bonus as one visible modifier when CPR computes damage. */
+/** Adds the Full Blast bonus as one modifier when CPR computes damage, and shows it on the card. */
 function decorateDamage(roll, fullBlast) {
   const baseTitle = roll.rollTitle;
+  const baseCard = roll.rollCard;
   const fullBlastTitle = t("FullBlast.Title", { name: baseTitle });
   roll.isFullBlast = fullBlast;
   roll._computeBase = function _computeBase() {
     // CPR's removeMod splices the last mod when the id is absent, so remove by index.
     const index = this.mods.findIndex((mod) => mod.id === MOD_ID);
     if (index !== -1) this.mods.splice(index, 1);
+    if (this.rollCard === DAMAGE_CARD_TEMPLATE) this.rollCard = baseCard;
     const base = Object.getPrototypeOf(this)._computeBase.call(this); // caps the multiplier
     if (!(this.isAutofire && this.isFullBlast)) {
       if (this.rollTitle === fullBlastTitle) this.rollTitle = baseTitle;
@@ -151,11 +162,36 @@ function decorateDamage(roll, fullBlast) {
         value: bonus,
         source: t("FullBlast.ModSource"),
       });
+      showDamageLine(this, baseCard, bonus);
     }
     this.rollTitle = fullBlastTitle;
     return base + bonus;
   };
   damageRolls.add(roll);
+}
+
+/** Renders the card through the wrapper. Without CPR's card as a partial, keeps the native card. */
+function showDamageLine(roll, baseCard, bonus) {
+  if (!(baseCard in Handlebars.partials)) return;
+  roll.fullBlastBaseCard = baseCard;
+  roll.fullBlastLine = t("FullBlast.DamageLine", {
+    dice: fullBlastFaces(roll.faces).join(" + "),
+    bonus,
+  });
+  roll.rollCard = DAMAGE_CARD_TEMPLATE;
+}
+
+/** Block helper: puts the line first in CPR's dice column, or after the card if the column is gone. */
+function insertDamageLine(line, options) {
+  const card = document.createElement("template");
+  card.innerHTML = options.fn(this);
+  const row = document.createElement("div");
+  row.className = `text-normal text-semi ${LINE_CLASS}`;
+  row.textContent = line;
+  const column = card.content.querySelector(".d6-data-div");
+  if (column) column.prepend(row);
+  else card.content.append(row);
+  return new Handlebars.SafeString(card.innerHTML);
 }
 
 /** "Full Blast?" after CPR's multiplier row. CPR's submitOnChange saves it onto the roll. */

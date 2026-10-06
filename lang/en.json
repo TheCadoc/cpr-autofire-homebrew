@@ -9,6 +9,7 @@
       "Title": "{name} (Full Blast)",
       "DamageCheckbox": "Full Blast?",
       "ModSource": "Full Blast (+1 per die)",
+      "DamageLine": "Full Blast! +1 per die ({dice})",
       "DamageTooltip": "Roll Full Blast damage"
     },
     "Errors": {
