@@ -4,6 +4,7 @@ const MODULE_ID = "cpr-autofire-homebrew";
 const MOD_ID = `${MODULE_ID}-full-blast`;
 const CARD_TEMPLATE = `modules/${MODULE_ID}/templates/full-blast-attack-card.hbs`;
 const MARKER_CLASS = `${MODULE_ID}-full-blast`;
+const PROMPT_CLASS = `${MODULE_ID}-prompt`;
 const DAMAGE_TYPE = "fullblast";
 const ITEM = "CONFIG.Item.documentClass.prototype";
 
@@ -85,11 +86,15 @@ function decorateAttack(roll, item) {
 function promptFullBlast(weapon, loaded, standard) {
   const required = fullBlastRounds(standard);
   const allowed = canFullBlast(loaded, standard);
-  const lines = [t("FullBlast.PromptLoaded", { loaded })];
-  if (!allowed) lines.push(t("FullBlast.PromptShort", { required }));
+  // CPR's chat-card block and text classes, so the prompt matches the attack card.
+  let content = `<div class="text-center text-normal text-semi">${t("FullBlast.PromptLoaded", { loaded })}</div>`;
+  if (!allowed) {
+    content += `<div class="text-center text-small">${t("FullBlast.PromptShort", { required })}</div>`;
+  }
   return foundry.applications.api.DialogV2.wait({
+    classes: [PROMPT_CLASS],
     window: { title: t("FullBlast.PromptTitle", { weapon }) },
-    content: lines.map((line) => `<p>${line}</p>`).join(""),
+    content: `<div class="cpr-block">${content}</div>`,
     buttons: [
       {
         action: "fullBlast",
