@@ -20,17 +20,17 @@
 
 ## File map
 
-| File                                   | Responsibility                                                         |
-| -------------------------------------- | ---------------------------------------------------------------------- |
-| `package.json`                         | `npm test` runs `node --test`. No dependencies.                        |
-| `module.json`                          | Foundry manifest (spec §6.1).                                          |
-| `lang/en.json`                         | All user-facing strings (spec §6.5).                                   |
-| `README.md`                            | Rule, requirements, install. Replaces GitHub's CRLF stub.              |
-| `scripts/rules.js`                     | Pure rule math.                                                        |
-| `test/rules.test.js`                   | Unit tests for `rules.js` (spec §9).                                   |
-| `scripts/main.js`                      | Entry point: `Hooks.once("init", register)`.                           |
+| File                                   | Responsibility                                                          |
+| -------------------------------------- | ----------------------------------------------------------------------- |
+| `package.json`                         | `npm test` runs `node --test`. No dependencies.                         |
+| `module.json`                          | Foundry manifest (spec §6.1).                                           |
+| `lang/en.json`                         | All user-facing strings (spec §6.5).                                    |
+| `README.md`                            | Rule, requirements, install. Replaces GitHub's CRLF stub.               |
+| `scripts/rules.js`                     | Pure rule math.                                                         |
+| `test/rules.test.js`                   | Unit tests for `rules.js` (spec §9).                                    |
+| `scripts/main.js`                      | Entry point: `Hooks.once("init", register)`.                            |
 | `scripts/full-blast.js`                | Wrappers, prompt, damage decoration, dialog checkbox, chat retargeting. |
-| `templates/full-blast-attack-card.hbs` | Marker wrapper around CPR's native Autofire card (spec §6.4).          |
+| `templates/full-blast-attack-card.hbs` | Marker wrapper around CPR's native Autofire card (spec §6.4).           |
 
 Paths are relative to the repo root `D:\Antigravity\foundry-cpr\modules\cpr-autofire-homebrew`. Lint and format run from `D:\Antigravity\foundry-cpr`.
 
@@ -304,8 +304,7 @@ const damageRolls = new WeakSet();
 /** Our bulletConsumption replacements, so none is ever wrapped twice. */
 const doubled = new WeakSet();
 
-const t = (key, data) =>
-  game.i18n.format(`CPR_AUTOFIRE_HOMEBREW.${key}`, data);
+const t = (key, data) => game.i18n.format(`CPR_AUTOFIRE_HOMEBREW.${key}`, data);
 
 /** Wires Full Blast into Cyberpunk RED. Must run in the init hook. */
 export function register() {
@@ -319,8 +318,18 @@ export function register() {
     Hooks.once("ready", () => ui.notifications.error(t("Errors.Unavailable")));
     return;
   }
-  libWrapper.register(MODULE_ID, `${ITEM}.createRoll`, wrapCreateRoll, "WRAPPER");
-  libWrapper.register(MODULE_ID, `${ITEM}.loadMixins`, wrapLoadMixins, "WRAPPER");
+  libWrapper.register(
+    MODULE_ID,
+    `${ITEM}.createRoll`,
+    wrapCreateRoll,
+    "WRAPPER",
+  );
+  libWrapper.register(
+    MODULE_ID,
+    `${ITEM}.loadMixins`,
+    wrapLoadMixins,
+    "WRAPPER",
+  );
 }
 
 function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
@@ -433,14 +442,14 @@ Covers R8 to R11 (spec §5) and units 2.2, 5, 6, and 8 (spec §6.3).
 - [ ] **Step 1: Register the two hooks.** In `register()`, after the two `libWrapper.register` calls, add:
 
 ```js
-  Hooks.on("renderCPRRollDialog", addDamageCheckbox);
-  Hooks.on("renderChatMessage", retargetDamageButton);
+Hooks.on("renderCPRRollDialog", addDamageCheckbox);
+Hooks.on("renderChatMessage", retargetDamageButton);
 ```
 
 - [ ] **Step 2: Decorate damage rolls.** In `wrapCreateRoll`, after the `decorateAttack` `if` block and before `return roll;`, add:
 
 ```js
-  if (type === "damage") decorateDamage(roll, fullBlast);
+if (type === "damage") decorateDamage(roll, fullBlast);
 ```
 
 - [ ] **Step 3: Append the damage units to `scripts/full-blast.js`**
@@ -462,7 +471,11 @@ function decorateDamage(roll, fullBlast) {
     }
     const bonus = fullBlastBonus(this.faces.length, this.autofireMultiplier);
     if (bonus !== 0) {
-      this.mods.push({ id: MOD_ID, value: bonus, source: t("FullBlast.ModSource") });
+      this.mods.push({
+        id: MOD_ID,
+        value: bonus,
+        source: t("FullBlast.ModSource"),
+      });
     }
     this.rollTitle = fullBlastTitle;
     return base + bonus;
@@ -489,7 +502,9 @@ function addDamageCheckbox(app, html) {
 /** Render-time only: the stored card keeps "autofire", so it rolls Autofire damage if this module is off. */
 function retargetDamageButton(message, html) {
   html
-    .find(`.${MARKER_CLASS} [data-action="rollDamage"][data-attack-type="autofire"]`)
+    .find(
+      `.${MARKER_CLASS} [data-action="rollDamage"][data-attack-type="autofire"]`,
+    )
     .attr("data-attack-type", DAMAGE_TYPE)
     .find("[data-tooltip]")
     .attr("data-tooltip", t("FullBlast.DamageTooltip"));

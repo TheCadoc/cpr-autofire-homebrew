@@ -1,0 +1,18 @@
+{
+  "CPR_AUTOFIRE_HOMEBREW": {
+    "FullBlast": {
+      "PromptTitle": "Autofire: {weapon}",
+      "PromptLoaded": "Rounds loaded: {loaded}",
+      "PromptShort": "Full Blast needs {required} rounds.",
+      "ButtonFullBlast": "Full Blast ({rounds} rounds)",
+      "ButtonStandard": "Standard Autofire ({rounds} rounds)",
+      "Title": "{name} (Full Blast)",
+      "DamageCheckbox": "Full Blast?",
+      "ModSource": "Full Blast (+1 per die)",
+      "DamageTooltip": "Roll Full Blast damage"
+    },
+    "Errors": {
+      "Unavailable": "CPR Autofire Homebrew could not hook into Cyberpunk RED. Full Blast is off."
+    }
+  }
+}
