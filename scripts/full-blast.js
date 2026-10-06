@@ -5,6 +5,7 @@ import {
   fullBlastRounds,
 } from "./rules.js";
 import { MARKER_CLASS, MODULE_ID, t } from "./constants.js";
+import { takePneumaFullBlast } from "./pneuma.js";
 
 const MOD_ID = `${MODULE_ID}-full-blast`;
 const CARD_TEMPLATE = `modules/${MODULE_ID}/templates/full-blast-attack-card.hbs`;
@@ -50,7 +51,12 @@ export function register() {
 }
 
 function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
-  const fullBlast = type === "damage" && extraData?.damageType === DAMAGE_TYPE;
+  // Every damage roll takes any pending Pneuma click, so a stale one never carries over.
+  const pneuma = type === "damage" && takePneumaFullBlast(this, actor);
+  const fullBlast =
+    type === "damage" &&
+    (extraData?.damageType === DAMAGE_TYPE ||
+      (pneuma && extraData?.damageType === "autofire"));
   if (fullBlast) extraData = { ...extraData, damageType: "autofire" };
   const roll = wrapped(type, actor, extraData, ...rest);
   if (
