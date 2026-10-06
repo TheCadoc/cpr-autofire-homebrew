@@ -563,6 +563,12 @@ git push -u origin feat/pneuma-compat
 
 Live resources were released to this session by `foundry full-blast-damage` on 2026-10-06. A session inside the worktree cannot run git in the live clone: `ExitWorktree` with `keep` first.
 
+Notes from the first attempt (2026-10-06, paused before L1 on Lukasz's request):
+
+- If `browser_navigate` fails with "Browser is already in use", another session's Playwright MCP holds the shared profile. Ask that session to run `browser_close`.
+- The assault rifle's magazine holds 25 rounds, so refill it after each Full Blast.
+- A new scene needs `tokenVision: false` (in the fixture below). Otherwise Pneuma's HUD attack does nothing.
+
 **Setup**
 
 - [ ] In the live clone `D:\Antigravity\foundry-cpr\modules\cpr-autofire-homebrew`: `git fetch origin`, `git checkout --detach origin/feat/pneuma-compat`. From `D:\Antigravity\foundry-cpr`: `npm run lint` and `npm run format:check`. Expected: clean (Playwright snapshot files in `foundry-cpr/.playwright-mcp/` fail `format:check`; delete them after testing, never commit them).
@@ -623,6 +629,9 @@ const scene = await Scene.create({
   width: 3000,
   height: 2000,
   padding: 0,
+  // Without this the defender is not visible to the controlled attacker, and
+  // Pneuma's attackFromHUD returns silently (target.isVisible is false).
+  tokenVision: false,
 });
 await scene.view();
 const [attackerToken, defenderToken] = await scene.createEmbeddedDocuments(
