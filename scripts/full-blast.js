@@ -38,6 +38,8 @@ export function register() {
     wrapLoadMixins,
     "WRAPPER",
   );
+  Hooks.on("renderCPRRollDialog", addDamageCheckbox);
+  Hooks.on("renderChatMessage", retargetDamageButton);
 }
 
 function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
@@ -51,6 +53,7 @@ function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
   ) {
     decorateAttack(roll, this);
   }
+  if (type === "damage") decorateDamage(roll, fullBlast);
   return roll;
 }
 
@@ -120,4 +123,59 @@ function wrapLoadMixins(wrapped, ...args) {
     this.bulletConsumption = bulletConsumption;
   }
   return result;
+}
+
+/** Adds the Full Blast bonus as one visible modifier when CPR computes damage. */
+function decorateDamage(roll, fullBlast) {
+  const baseTitle = roll.rollTitle;
+  const fullBlastTitle = t("FullBlast.Title", { name: baseTitle });
+  roll.isFullBlast = fullBlast;
+  roll._computeBase = function _computeBase() {
+    // CPR's removeMod splices the last mod when the id is absent, so remove by index.
+    const index = this.mods.findIndex((mod) => mod.id === MOD_ID);
+    if (index !== -1) this.mods.splice(index, 1);
+    const base = Object.getPrototypeOf(this)._computeBase.call(this); // caps the multiplier
+    if (!(this.isAutofire && this.isFullBlast)) {
+      if (this.rollTitle === fullBlastTitle) this.rollTitle = baseTitle;
+      return base;
+    }
+    const bonus = fullBlastBonus(this.faces.length, this.autofireMultiplier);
+    if (bonus !== 0) {
+      this.mods.push({
+        id: MOD_ID,
+        value: bonus,
+        source: t("FullBlast.ModSource"),
+      });
+    }
+    this.rollTitle = fullBlastTitle;
+    return base + bonus;
+  };
+  damageRolls.add(roll);
+}
+
+/** "Full Blast?" after CPR's multiplier row. CPR's submitOnChange saves it onto the roll. */
+function addDamageCheckbox(app, html) {
+  const roll = app.rollData;
+  if (!damageRolls.has(roll) || !roll.isAutofire) return;
+  const anchor = html
+    .find('input[name="autofireMultiplier"]')
+    .closest("li.dialog-item");
+  if (!anchor.length) return;
+  anchor.after(`<li class="dialog-item flexrow ${MODULE_ID}-row">
+    <div class="dialog-item-name text-nowrap">${t("FullBlast.DamageCheckbox")}</div>
+    <div class="dialog-item-input text-nowrap">
+      <input type="checkbox" name="isFullBlast" data-dtype="Boolean"${roll.isFullBlast ? " checked" : ""} />
+    </div>
+  </li>`);
+}
+
+/** Render-time only: the stored card keeps "autofire", so it rolls Autofire damage if this module is off. */
+function retargetDamageButton(message, html) {
+  html
+    .find(
+      `.${MARKER_CLASS} [data-action="rollDamage"][data-attack-type="autofire"]`,
+    )
+    .attr("data-attack-type", DAMAGE_TYPE)
+    .find("[data-tooltip]")
+    .attr("data-tooltip", t("FullBlast.DamageTooltip"));
 }
