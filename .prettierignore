@@ -1,0 +1,4 @@
+# Prettier's Handlebars parser cannot parse partials ({{> ...}}), which Foundry templates use.
+*.hbs
+.claude/
+package-lock.json
