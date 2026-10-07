@@ -33,7 +33,7 @@ Rejected alternatives:
 ## 3. Environment
 
 - Module repo `TheCadoc/cpr-autofire-homebrew`, currently **private**. `origin/main` is at b771e0e (v0.2.0, with Pneuma support). The live clone at `foundry-cpr/modules/cpr-autofire-homebrew` is the copy Foundry loads, and it is 11 commits behind.
-- The Optional Rules session works in worktree `.claude/worktrees/optional-dice-rules` on branch `worktree-optional-dice-rules`. It had no commits when this spec was written.
+- The Optional Rules work is draft PR #7, "feat: optional rules for dice above 6 and modified criticals" (`feat/optional-dice-rules`). "The Optional Rules PR" in this spec means PR #7.
 - The `foundry-cpr` workspace has ESLint 10.12.0, `@eslint/js` ^10.0.1, `globals` ^17.13.0, and Prettier ^3.9.9. The module repo has no lint or format config of its own. Its `package.json` has only `"test": "node --test"`.
 - Node 22. `gh` is logged in as `TheCadoc` with the scopes `repo` and `workflow`.
 
