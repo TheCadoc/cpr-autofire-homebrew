@@ -13,6 +13,16 @@
       "DamageTooltip": "Roll Full Blast damage",
       "PneumaDamageTooltip": "Roll Full Blast damage (Shift-click to roll immediately)"
     },
+    "Settings": {
+      "AboveSix": {
+        "Name": "Allow dice results to be modified above 6",
+        "Hint": "Off: Full Blast raises no die above 6, so a natural 6 stays 6. On: a natural 6 becomes 7."
+      },
+      "ModifiedCriticals": {
+        "Name": "Count modified dice towards criticals",
+        "Hint": "Off: only natural 6s count toward a critical. On: a die Full Blast raises to 6 or more also counts, so a natural 5 counts."
+      }
+    },
     "Errors": {
       "Unavailable": "CPR Autofire Homebrew could not hook into Cyberpunk RED. Full Blast is off.",
       "PneumaUnverified": "CPR Autofire Homebrew was verified with Pneuma's Combat Tools {verified}; {version} is installed. If Pneuma's damage button stops rolling Full Blast damage, tick \"Full Blast?\" in the damage dialog."
