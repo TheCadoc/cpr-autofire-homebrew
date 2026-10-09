@@ -3,6 +3,7 @@ import {
   fullBlastBonus,
   fullBlastFaces,
   fullBlastRounds,
+  isFullBlastCritical,
 } from "./rules.js";
 import { MARKER_CLASS, MODULE_ID, t } from "./constants.js";
 import { takePneumaFullBlast } from "./pneuma.js";
@@ -15,6 +16,10 @@ const LINE_CLASS = `${MARKER_CLASS}-line`;
 const PROMPT_CLASS = `${MODULE_ID}-prompt`;
 const DAMAGE_TYPE = "fullblast";
 const ITEM = "CONFIG.Item.documentClass.prototype";
+const ABOVE_SIX_SETTING = "modifiedAboveSix";
+const CRITICAL_SETTING = "modifiedCriticals";
+
+const setting = (key) => game.settings.get(MODULE_ID, key);
 
 /** Damage rolls this module decorated. Only these get the dialog checkbox. */
 const damageRolls = new WeakSet();
@@ -32,6 +37,19 @@ export function register() {
     );
     Hooks.once("ready", () => ui.notifications.error(t("Errors.Unavailable")));
     return;
+  }
+  for (const [key, label] of [
+    [ABOVE_SIX_SETTING, "AboveSix"],
+    [CRITICAL_SETTING, "ModifiedCriticals"],
+  ]) {
+    game.settings.register(MODULE_ID, key, {
+      name: `CPR_AUTOFIRE_HOMEBREW.Settings.${label}.Name`,
+      hint: `CPR_AUTOFIRE_HOMEBREW.Settings.${label}.Hint`,
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: false,
+    });
   }
   libWrapper.register(
     MODULE_ID,
@@ -158,27 +176,35 @@ function decorateDamage(roll, fullBlast) {
       if (this.rollTitle === fullBlastTitle) this.rollTitle = baseTitle;
       return base;
     }
-    const bonus = fullBlastBonus(this.faces.length, this.autofireMultiplier);
+    const aboveSix = setting(ABOVE_SIX_SETTING);
+    const bonus = fullBlastBonus(this.faces, this.autofireMultiplier, aboveSix);
     if (bonus !== 0) {
       this.mods.push({
         id: MOD_ID,
         value: bonus,
         source: t("FullBlast.ModSource"),
       });
-      showDamageLine(this, baseCard, bonus);
+      showDamageLine(this, baseCard, bonus, aboveSix);
     }
     this.rollTitle = fullBlastTitle;
     return base + bonus;
+  };
+  // With the setting off, CPR's own rule decides: natural 6s only.
+  roll.wasCritSuccess = function wasCritSuccess() {
+    if (!(this.isAutofire && this.isFullBlast && setting(CRITICAL_SETTING))) {
+      return Object.getPrototypeOf(this).wasCritSuccess.call(this);
+    }
+    return isFullBlastCritical(this.faces, setting(ABOVE_SIX_SETTING), true);
   };
   damageRolls.add(roll);
 }
 
 /** Renders the card through the wrapper. Without CPR's card as a partial, keeps the native card. */
-function showDamageLine(roll, baseCard, bonus) {
+function showDamageLine(roll, baseCard, bonus, aboveSix) {
   if (!(baseCard in Handlebars.partials)) return;
   roll.fullBlastBaseCard = baseCard;
   roll.fullBlastLine = t("FullBlast.DamageLine", {
-    dice: fullBlastFaces(roll.faces).join(" + "),
+    dice: fullBlastFaces(roll.faces, aboveSix).join(" + "),
     bonus,
   });
   roll.rollCard = DAMAGE_CARD_TEMPLATE;
