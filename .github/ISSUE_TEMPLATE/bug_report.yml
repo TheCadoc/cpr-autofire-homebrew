@@ -1,0 +1,66 @@
+name: Bug report
+description: Something in the module does not work as the README describes.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Before reporting, check that the bug still happens with only this module, libWrapper, and (if relevant) Pneuma's Combat Tools enabled.
+  - type: input
+    id: foundry
+    attributes:
+      label: Foundry VTT version
+      placeholder: "12.343"
+    validations:
+      required: true
+  - type: input
+    id: cpr
+    attributes:
+      label: Cyberpunk RED Core version
+      placeholder: "0.92.4"
+    validations:
+      required: true
+  - type: input
+    id: module
+    attributes:
+      label: Module version
+      placeholder: "0.3.0"
+    validations:
+      required: true
+  - type: input
+    id: libwrapper
+    attributes:
+      label: libWrapper version
+    validations:
+      required: true
+  - type: input
+    id: pneuma
+    attributes:
+      label: Pneuma's Combat Tools version, if installed
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors
+      description: Open the browser console (F12), reproduce the bug, and paste any red errors.
+      render: text
