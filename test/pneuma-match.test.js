@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  fullBlastDamageTitle,
   hasClassToken,
   isPneumaFullBlast,
   shouldWarnPneuma,
@@ -100,4 +101,39 @@ test("shouldWarnPneuma warns once per unverified version", () => {
   assert.equal(shouldWarnPneuma("0.9.11", "0.9.10", "0.9.11"), false);
   assert.equal(shouldWarnPneuma("0.9.12", "0.9.10", "0.9.11"), true);
   assert.equal(shouldWarnPneuma(undefined, "0.9.10", ""), false);
+});
+
+const LABEL = "Roll Full Blast damage";
+
+test("fullBlastDamageTitle names Full Blast and keeps Pneuma's click hint", () => {
+  // Pneuma 0.9.16
+  assert.equal(
+    fullBlastDamageTitle(
+      "Roll damage (Click to roll immediately; Shift-click to modify)",
+      LABEL,
+    ),
+    "Roll Full Blast damage (Click to roll immediately; Shift-click to modify)",
+  );
+  // Pneuma 0.9.10
+  assert.equal(
+    fullBlastDamageTitle(
+      "Roll damage (Shift-click to roll immediately; manual override allowed)",
+      LABEL,
+    ),
+    "Roll Full Blast damage (Shift-click to roll immediately; manual override allowed)",
+  );
+  assert.equal(fullBlastDamageTitle("Roll damage", LABEL), LABEL);
+});
+
+test("fullBlastDamageTitle leaves other titles alone", () => {
+  // A disabled button explains itself; renaming it would hide why.
+  assert.equal(
+    fullBlastDamageTitle("Attack missed, a GM can allow damage", LABEL),
+    "Attack missed, a GM can allow damage",
+  );
+  // Already renamed, so a re-render changes nothing.
+  const renamed = fullBlastDamageTitle("Roll damage (Shift-click)", LABEL);
+  assert.equal(fullBlastDamageTitle(renamed, LABEL), renamed);
+  assert.equal(fullBlastDamageTitle("", LABEL), "");
+  assert.equal(fullBlastDamageTitle(undefined, LABEL), undefined);
 });

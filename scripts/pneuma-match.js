@@ -51,6 +51,24 @@ export function isPneumaFullBlast({
   );
 }
 
+/** How Pneuma's enabled damage button title starts, in every version verified so far. */
+const PNEUMA_DAMAGE_TITLE = "Roll damage";
+
+/**
+ * Pneuma's damage button title with `label` in place of "Roll damage", keeping Pneuma's click hint,
+ * which changed between versions. Any other title, such as a disabled button's reason, is unchanged.
+ *
+ * @param {string|undefined} title - the title Pneuma rendered
+ * @param {string} label - the localized "Roll Full Blast damage"
+ * @returns {string|undefined}
+ */
+export function fullBlastDamageTitle(title, label) {
+  if (typeof title !== "string" || !title.startsWith(PNEUMA_DAMAGE_TITLE)) {
+    return title;
+  }
+  return label + title.slice(PNEUMA_DAMAGE_TITLE.length);
+}
+
 /**
  * Whether to warn the GM that the installed Pneuma version was not verified.
  *

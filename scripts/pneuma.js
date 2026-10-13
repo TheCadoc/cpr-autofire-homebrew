@@ -1,12 +1,13 @@
 import { MARKER_CLASS, MODULE_ID, t } from "./constants.js";
 import {
+  fullBlastDamageTitle,
   hasClassToken,
   isPneumaFullBlast,
   shouldWarnPneuma,
 } from "./pneuma-match.js";
 
 const PNEUMA_ID = "pneuma-combattools";
-const PNEUMA_VERIFIED = "0.9.10";
+const PNEUMA_VERIFIED = "0.9.16";
 /** Pneuma's own GM reply timeout, so its damage claim has finished or failed by then. */
 const PENDING_MS = 15000;
 const WARNED_SETTING = "pneumaWarnedVersion";
@@ -50,7 +51,12 @@ function decorateExchange(message, html) {
     name.setAttribute(TITLED, "");
   }
   const button = root.querySelector(DAMAGE_BUTTON);
-  if (button) button.title = t("FullBlast.PneumaDamageTooltip");
+  if (button) {
+    button.title = fullBlastDamageTitle(
+      button.title,
+      t("FullBlast.DamageTooltip"),
+    );
+  }
   // Capture runs before Pneuma's own click handler on the button.
   root.addEventListener(
     "click",

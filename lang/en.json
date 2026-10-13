@@ -10,8 +10,7 @@
       "DamageCheckbox": "Full Blast?",
       "ModSource": "Full Blast (+1 per die)",
       "DamageLine": "Full Blast! +1 per die ({dice})",
-      "DamageTooltip": "Roll Full Blast damage",
-      "PneumaDamageTooltip": "Roll Full Blast damage (Shift-click to roll immediately)"
+      "DamageTooltip": "Roll Full Blast damage"
     },
     "Settings": {
       "AboveSix": {
@@ -24,8 +23,8 @@
       }
     },
     "Errors": {
-      "Unavailable": "CPR Autofire Homebrew could not hook into Cyberpunk RED. Full Blast is off.",
-      "PneumaUnverified": "CPR Autofire Homebrew was verified with Pneuma's Combat Tools {verified}; {version} is installed. If Pneuma's damage button stops rolling Full Blast damage, tick \"Full Blast?\" in the damage dialog."
+      "Unavailable": "Autofire Homebrew for Cyberpunk RED could not hook into Cyberpunk RED. Full Blast is off.",
+      "PneumaUnverified": "Autofire Homebrew for Cyberpunk RED was verified with Pneuma's Combat Tools {verified}; {version} is installed. If Pneuma's damage button stops rolling Full Blast damage, open CPR's damage dialog from it and tick \"Full Blast?\"."
     }
   }
 }
