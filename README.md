@@ -24,13 +24,13 @@ With Pneuma's Combat Tools, the second setting changes CPR's damage card (the +5
 
 ## Pneuma's Combat Tools
 
-Verified with Pneuma's Combat Tools 0.9.10. It is optional; nothing changes when it is not active.
+Verified with Pneuma's Combat Tools 0.9.16. It is optional; nothing changes when it is not active.
 
 - Autofire attacks from Pneuma's token HUD, and sheet attacks Pneuma routes through its exchange, show the Full Blast prompt and spend the Full Blast cost.
-- Pneuma's damage button on a Full Blast attack rolls Full Blast damage, including Shift-click. The damage dialog shows "Full Blast?" checked.
+- Pneuma's damage button on a Full Blast attack rolls Full Blast damage. A click rolls at once; Shift-click opens CPR's damage dialog, which shows "Full Blast?" checked. (Before Pneuma 0.9.15 the two were the other way round.)
 - Pneuma's attack cards show "(Full Blast)".
 - Pneuma's HUD still disables Autofire below 10 rounds. The prompt disables Full Blast below 20.
-- With another Pneuma version, the GM sees one warning. If its damage button stops rolling Full Blast damage, tick "Full Blast?" in the damage dialog.
+- With another Pneuma version, the GM sees one warning. If its damage button stops rolling Full Blast damage, open CPR's damage dialog from it and tick "Full Blast?".
 
 ## Requirements
 
