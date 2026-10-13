@@ -34,7 +34,7 @@ export default [
     },
   },
   {
-    files: ["test/**/*.js"],
+    files: ["test/**/*.js", ".github/scripts/**/*.mjs"],
     languageOptions: { globals: globals.node },
   },
 ];
