@@ -27,6 +27,10 @@ CI runs `npm test`, `npm run lint`, and `npm run format:check` on every pull req
 - In the PR description, list the steps you ran in Foundry and what you saw. Add screenshots for anything visible.
 - Don't import Cyberpunk RED internals from `/systems/cyberpunk-red-core/modules/...`. Use Foundry hooks, libWrapper, and `game.cpr`; internal imports break when the system refactors.
 
+## Design docs
+
+Each feature's design spec is in `docs/superpowers/specs/` and its implementation plan in `docs/superpowers/plans/`. Read the spec for a rule before changing how it behaves.
+
 ## New homebrew rules
 
 Open an issue before writing code. Link the rule's source and name its author, so the README can credit them. Describe rules in your own words. R. Talsorian Games' [Homebrew Content Policy](https://rtalsoriangames.com/homebrew-content-policy/) does not allow copying official rules text, and other homebrewers' text belongs to them.
