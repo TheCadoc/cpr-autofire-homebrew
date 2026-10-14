@@ -73,11 +73,12 @@ export function register() {
 
 /** Whether this weapon may Full Blast under the "Require the Adjustable Gas Piston" setting. */
 function fullBlastAllowed(item) {
+  const gatingOn = setting(GATING_SETTING);
   const upgrades =
-    typeof item?.getInstalledItems === "function"
+    gatingOn && typeof item?.getInstalledItems === "function"
       ? item.getInstalledItems("itemUpgrade")
       : [];
-  return allowsFullBlast(setting(GATING_SETTING), hasGasPiston(upgrades));
+  return allowsFullBlast(gatingOn, hasGasPiston(upgrades));
 }
 
 function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
@@ -98,8 +99,9 @@ function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
     decorateAttack(roll, this);
   }
   // A roll that started as Full Blast keeps its checkbox; the attack was legal when made.
-  if (type === "damage")
+  if (type === "damage") {
     decorateDamage(roll, fullBlast, fullBlast || fullBlastAllowed(this));
+  }
   return roll;
 }
 
