@@ -1,0 +1,20 @@
+{
+  "_id": "afhGasPiston0001",
+  "_key": "!items!afhGasPiston0001",
+  "name": "Adjustable Gas Piston",
+  "type": "itemUpgrade",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "type": "weapon",
+    "size": 0,
+    "price": { "market": 1000 },
+    "description": {
+      "value": "<p>An invented tech upgrade for a weapon capable of Autofire. A weapon with it installed can Full Blast: an Autofire attack that spends twice the usual ammunition and adds 1 to each damage die before the Autofire multiplier. A raised die stops at 6 unless the GM turns on <em>Allow dice results to be modified above 6</em>.</p><p>Inventing it is an Upgrade DV24 check. The first cost is the cost of the weapon being upgraded; the second cost, 1,000eb, is this item's price. It takes no upgrade slot. Installed in a weapon without Autofire, it does nothing.</p><p>It matters only when the GM turns on <em>Require the Adjustable Gas Piston for Full Blast</em>. Otherwise every Autofire weapon can Full Blast.</p><p><em>Adapted from the Adjustable Gas Piston by u/Infernox-Ratchet, in Heavy Armor Lizard's Autofire Compendium.</em></p>"
+    }
+  },
+  "effects": [],
+  "flags": {
+    "cpr-autofire-homebrew": { "gasPiston": true },
+    "cyberpunk-red-core": { "_migration": { "current": 38 } }
+  }
+}

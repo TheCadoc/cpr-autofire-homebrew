@@ -1,7 +1,8 @@
 # Adjustable Gas Piston gating design spec
 
 - Date: 2026-10-11
-- Status: draft; reviewed 2026-10-13, decisions open (section 2). Not approved.
+- Status: approved 2026-10-13. Lukasz accepted the review's recommendations for decisions 2 to 12; question 6 (asking the author before shipping the item) is open until the PR merges.
+- Plan: docs/superpowers/plans/2026-10-13-gas-piston-gating.md
 - Reviewed: 2026-10-13 against CPR v0.92.4 (`foundry-cpr/reference/fvtt-cyberpunk-red-core`, tag v0.92.4), Pneuma's Combat Tools 0.9.16 (`ca73a50`) and the installed 0.9.10, and the source Google Doc.
 - Module: `cpr-autofire-homebrew` (this repo)
 - Tracks: issue #10, "Gate Full Blast per weapon (Adjustable Gas Piston as a tech upgrade)"
@@ -23,20 +24,20 @@ Requested by Lukasz (2026-10-11): the requirement is **off by default** and enab
 
 ## 2. Decisions
 
-| #   | Decision                                   | Proposed                                                                                                                                                                                                                                                                                                                                                      | Status  |
-| --- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| 1   | Default                                    | Gating off. Every Autofire weapon keeps Full Blast until the GM turns gating on.                                                                                                                                                                                                                                                                              | Decided |
-| 2   | Setting scope                              | `world`, `config: true`, Boolean. A table rule the GM sets, like the two Optional Rules settings. The request said "user settings"; confirm that means module settings, not per-player `client` scope. Review: world scope recommended. Client scope would let each player decide whether their own weapon needs a piston.                                    | Open    |
-| 3   | How a weapon "has" the piston              | A native CPR `itemUpgrade` item installed in the weapon, marked with a module flag. Replaces issue #10's per-weapon checkbox: it uses CPR's own upgrade slots and the item can carry the cost. Review: the CPR data model supports this at no extra cost (facts 8 to 10).                                                                                     | Open    |
-| 4   | Detection                                  | Match the module flag `flags.cpr-autofire-homebrew.gasPiston === true` on any installed upgrade. Not by name, so a renamed or translated copy still counts. Review: the flag survives install, uninstall, and copies (fact 10), so no `_stats.compendiumSource` fallback is needed.                                                                           | Open    |
-| 5   | Prompt for a gated weapon without a piston | No prompt. Standard Autofire runs natively, as if this module were off for that attack.                                                                                                                                                                                                                                                                       | Open    |
-| 6   | Damage dialog "Full Blast?" checkbox       | Under gating, hide the checkbox for a weapon without the piston only when `!roll.isFullBlast`. Shown as today otherwise. Review: hiding it unconditionally collides with decision 7. An old Full Blast card from a weapon without a piston rolls with `isFullBlast` already true, so the toggle would stay active but invisible.                              | Open    |
-| 7   | Old Full Blast cards after gating turns on | They still roll Full Blast damage. The attack was legal when made.                                                                                                                                                                                                                                                                                            | Open    |
-| 8   | Upgrade slots                              | The item takes 0 slots, because the source makes it an invention, not an attachment. Review: supported. `system.size` allows 0, and CPR's capacity check passes it (fact 9).                                                                                                                                                                                  | Open    |
-| 9   | Restrict installation to Autofire weapons  | Not enforced by code. The item description states the restriction; a piston on a non-Autofire weapon does nothing. Review: CPR restricts upgrades by item type only, and only in its UI selection paths (`cpr-installable.js:33-36`, `cpr-container.js:112-118`). `installItems` itself does not check the type, and there is no fire-mode filter (fact 9).   | Open    |
-| 10  | Item data                                  | Name, a description in our words, the 1,000eb second cost as price, and the DV24 invention check and the first cost stated in the description. Review: supported. The price field is `system.price.market`, modifiers may all be null, and CPR has no item field for an invention DV (fact 9).                                                                | Open    |
-| 11  | Compendium build                           | JSON sources in `packs/_source/`, compiled to LevelDB with `@foundryvtt/foundryvtt-cli` by an `npm run packs` script and by the release workflow. Breaks the repo's "no build step" convention for packs only (section 6.3). Review: gitignore the compiled LevelDB, build it in the release workflow, and run `npm run packs` for development (section 6.3). | Open    |
-| 12  | Alternate rule (3d6, drop lowest)          | Out of scope. A possible later world setting.                                                                                                                                                                                                                                                                                                                 | Open    |
+| #   | Decision                                   | Proposed                                                                                                                                                                                                                                                                                                                                                                                                                   | Status  |
+| --- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | Default                                    | Gating off. Every Autofire weapon keeps Full Blast until the GM turns gating on.                                                                                                                                                                                                                                                                                                                                           | Decided |
+| 2   | Setting scope                              | `world`, `config: true`, Boolean. A table rule the GM sets, like the two Optional Rules settings. The request said "user settings"; confirm that means module settings, not per-player `client` scope. Review: world scope recommended. Client scope would let each player decide whether their own weapon needs a piston.                                                                                                 | Decided |
+| 3   | How a weapon "has" the piston              | A native CPR `itemUpgrade` item installed in the weapon, marked with a module flag. Replaces issue #10's per-weapon checkbox: it uses CPR's own upgrade slots and the item can carry the cost. Review: the CPR data model supports this at no extra cost (facts 8 to 10).                                                                                                                                                  | Decided |
+| 4   | Detection                                  | Match the module flag `flags.cpr-autofire-homebrew.gasPiston === true` on any installed upgrade. Not by name, so a renamed or translated copy still counts. Review: the flag survives install, uninstall, and copies (fact 10), so no `_stats.compendiumSource` fallback is needed.                                                                                                                                        | Decided |
+| 5   | Prompt for a gated weapon without a piston | No prompt. Standard Autofire runs natively, as if this module were off for that attack.                                                                                                                                                                                                                                                                                                                                    | Decided |
+| 6   | Damage dialog "Full Blast?" checkbox       | Under gating, the checkbox shows only for a roll that started as Full Blast or a weapon with the piston. It is decided once, when the damage roll is created, so ticking or unticking it never makes it disappear. Review: hiding it unconditionally collides with decision 7. An old Full Blast card from a weapon without a piston rolls with `isFullBlast` already true, so the toggle would stay active but invisible. | Decided |
+| 7   | Old Full Blast cards after gating turns on | They still roll Full Blast damage. The attack was legal when made.                                                                                                                                                                                                                                                                                                                                                         | Decided |
+| 8   | Upgrade slots                              | The item takes 0 slots, because the source makes it an invention, not an attachment. Review: supported. `system.size` allows 0, and CPR's capacity check passes it (fact 9).                                                                                                                                                                                                                                               | Decided |
+| 9   | Restrict installation to Autofire weapons  | Not enforced by code. The item description states the restriction; a piston on a non-Autofire weapon does nothing. Review: CPR restricts upgrades by item type only, and only in its UI selection paths (`cpr-installable.js:33-36`, `cpr-container.js:112-118`). `installItems` itself does not check the type, and there is no fire-mode filter (fact 9).                                                                | Decided |
+| 10  | Item data                                  | Name, a description in our words, the 1,000eb second cost as price, and the DV24 invention check and the first cost stated in the description. Review: supported. The price field is `system.price.market`, modifiers may all be null, and CPR has no item field for an invention DV (fact 9).                                                                                                                             | Decided |
+| 11  | Compendium build                           | JSON sources in `packs/_source/`, compiled to LevelDB with `@foundryvtt/foundryvtt-cli` by an `npm run packs` script and by the release workflow. Breaks the repo's "no build step" convention for packs only (section 6.3). Review: gitignore the compiled LevelDB, build it in the release workflow, and run `npm run packs` for development (section 6.3).                                                              | Decided |
+| 12  | Alternate rule (3d6, drop lowest)          | Out of scope. A possible later world setting.                                                                                                                                                                                                                                                                                                                                                                              | Decided |
 
 Rejected so far:
 
@@ -47,9 +48,9 @@ Rejected so far:
 ## 3. Environment
 
 - Foundry VTT v12 (verified 12.343). Cyberpunk RED Core v0.92.4. libWrapper required.
-- This repo at `main` d751974 (v0.3.0 with Optional Rules). The repo is public.
-- The README section "Differences from the source" that section 1 cites arrives with PR #11 (`chore/public-release-0.3.0`). It is not on `main` yet.
-- Pneuma's Combat Tools: facts were read at `main` 0.9.16 (`ca73a50`, tag `v0.9.16`). The workspace's Foundry install moved from 0.9.10 to 0.9.16 on 2026-10-13, and Full Blast was re-verified live against it; the module's verified Pneuma version moves to 0.9.16 in its own PR.
+- This repo at `main` 368119e (v0.3.0, with PRs #11, #12, and #13 merged). The repo is public.
+- The README section "Differences from the source" that section 1 cites came with PR #11.
+- Pneuma's Combat Tools: facts were read at `main` 0.9.16 (`ca73a50`, tag `v0.9.16`). The workspace's Foundry install moved from 0.9.10 to 0.9.16 on 2026-10-13, and Full Blast was re-verified live against it; the module's verified Pneuma version moved to 0.9.16 in PR #13.
 - CPR reference source: `foundry-cpr/reference/fvtt-cyberpunk-red-core/` at tag v0.92.4. Available; CPR paths in section 4 are relative to its `src/`.
 
 ## 4. Facts the design depends on
@@ -76,7 +77,7 @@ Verified in CPR v0.92.4 on 2026-10-13:
    - Modifiers: every value may be null. Null and 0 are skipped (`modules/item/mixins/cpr-upgradable.js:37`). The core Bayonet ships with every value null.
    - No item has an invention DV field.
 10. **Flags survive.** On an actor, install pushes the upgrade's id onto the list and uninstall splices it out; the upgrade stays the same embedded document (`cpr-container.js:248-276, 372-381, 427-440`). Copies between actors, from world to actor, and into compendium install trees are made with `toObject()`, which keeps flags but assigns new ids (`cpr-container.js:534-571`, `modules/item/cpr-item.js:231-288`).
-11. **The damage dialog has the item.** `CPRRollDialog` stores the item next to the roll (`modules/dialog/cpr-roll-dialog.js:15-30`, `this.item = item`), so a `renderCPRRollDialog` hook can read `app.item`. For a `secondaryWeapon` upgrade, `app.item` is the itemUpgrade itself.
+11. **The damage dialog has the item.** `CPRRollDialog` stores the item next to the roll (`modules/dialog/cpr-roll-dialog.js:15-30`, `this.item = item`), so a `renderCPRRollDialog` hook can read `app.item`. For a `secondaryWeapon` upgrade, `app.item` is the itemUpgrade itself. The implementation does not use it: it decides the checkbox when the damage roll is created, where `this` is the weapon.
 
 ## 5. Requirements
 
@@ -93,15 +94,15 @@ Verified in CPR v0.92.4 on 2026-10-13:
 
 ### 6.1 Code
 
-| File                      | Change                                                                                                                                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `scripts/gating.js` (new) | Pure: `requiresPiston(gatingOn, hasPiston)` and `hasPistonFlag(upgrades, flagPath)`, which takes plain objects. No Foundry globals, so it is unit-tested.                                              |
-| `scripts/full-blast.js`   | Register the setting. Add `fullBlastAllowed(item)` and use it in the `wrapCreateRoll` eligibility check (fact 1) and in `addDamageCheckbox` (fact 5), which gets the weapon from `app.item` (fact 11). |
-| `scripts/constants.js`    | `GAS_PISTON_FLAG = "gasPiston"` and the setting key.                                                                                                                                                   |
-| `lang/en.json`            | Setting name and hint, compendium label.                                                                                                                                                               |
-| `test/gating.test.js`     | Unit tests (section 8).                                                                                                                                                                                |
+| File                      | Change                                                                                                                                                                                                                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `scripts/gating.js` (new) | Pure: `allowsFullBlast(gatingOn, hasPiston)` and `hasGasPiston(upgrades)`, which takes plain objects. No Foundry globals, so it is unit-tested.                                                                                                                                |
+| `scripts/full-blast.js`   | Register the setting. Add `fullBlastAllowed(item)` and use it in the `wrapCreateRoll` eligibility check (fact 1) and, when a damage roll is created, to decide whether its dialog shows the "Full Blast?" checkbox (fact 5). A roll that started as Full Blast always gets it. |
+| `scripts/constants.js`    | `GAS_PISTON_FLAG = "gasPiston"`. The setting key stays in `full-blast.js` with the other setting keys.                                                                                                                                                                         |
+| `lang/en.json`            | Setting name and hint. The pack label stays literal in `module.json`; Foundry v12 does not localize it.                                                                                                                                                                        |
+| `test/gating.test.js`     | Unit tests (section 8).                                                                                                                                                                                                                                                        |
 
-`fullBlastAllowed(item)` reads `item.getInstalledItems("itemUpgrade")` (fact 7). In `wrapCreateRoll`, `this` is already the weapon.
+`fullBlastAllowed(item)` reads `item.getInstalledItems("itemUpgrade")` (fact 7). In `wrapCreateRoll`, `this` is already the weapon. With gating off it skips the lookup.
 
 ### 6.2 Compendium
 
@@ -118,23 +119,23 @@ Verified in CPR v0.92.4 on 2026-10-13:
 
 ## 7. Outstanding questions
 
-1. Decision 2: is "user settings" world scope (GM) or per-player? World is recommended.
-2. Decision 3: is a native upgrade item the right model, or is issue #10's checkbox preferred for simplicity? The data model supports the upgrade item (facts 8 to 10).
-3. Decision 7: should old Full Blast cards be blocked once gating is on?
-4. Decision 11: is a pack build step acceptable? Answered in part: the compiled pack should be ignored, not committed (section 6.3).
-5. Does Pneuma's HUD need to show anything different for a gated weapon? Today it disables Autofire below 10 rounds and knows nothing about Full Blast, which stays true.
+1. Decision 2: is "user settings" world scope (GM) or per-player? World is recommended. Decided 2026-10-13: world.
+2. Decision 3: is a native upgrade item the right model, or is issue #10's checkbox preferred for simplicity? The data model supports the upgrade item (facts 8 to 10). Decided 2026-10-13: the upgrade item.
+3. Decision 7: should old Full Blast cards be blocked once gating is on? Decided 2026-10-13: no; they still roll Full Blast damage (decision 7).
+4. Decision 11: is a pack build step acceptable? Answered in part: the compiled pack should be ignored, not committed (section 6.3). Decided 2026-10-13: yes; the compiled pack is gitignored and built in CI and the release.
+5. Does Pneuma's HUD need to show anything different for a gated weapon? Today it disables Autofire below 10 rounds and knows nothing about Full Blast, which stays true. Decided 2026-10-13: no change to Pneuma's HUD is needed.
 6. Permission and credit: the go-public spec plans to tell u/Infernox-Ratchet the rule is credited. Shipping the item itself in a compendium may merit asking first.
 
 ## 8. Testing and acceptance
 
 Unit tests (`npm test`):
 
-| Case                                                 | Expected           |
-| ---------------------------------------------------- | ------------------ |
-| `requiresPiston(false, false)`, `(false, true)`      | allowed            |
-| `requiresPiston(true, true)`                         | allowed            |
-| `requiresPiston(true, false)`                        | blocked            |
-| `hasPistonFlag([])`, upgrade without flag, with flag | false, false, true |
+| Case                                                | Expected           |
+| --------------------------------------------------- | ------------------ |
+| `allowsFullBlast(false, false)`, `(false, true)`    | allowed            |
+| `allowsFullBlast(true, true)`                       | allowed            |
+| `allowsFullBlast(true, false)`                      | blocked            |
+| `hasGasPiston([])`, upgrade without flag, with flag | false, false, true |
 
 Manual checklist (Foundry v12, CPR 0.92.4, libWrapper; Pneuma on for M5 and M6):
 
@@ -156,4 +157,5 @@ Manual checklist (Foundry v12, CPR 0.92.4, libWrapper; Pneuma on for M5 and M6):
 - The source's other items (follow-up spec).
 - The alternate 3d6-drop-lowest rule.
 - Enforcing the DV24 invention check, the first cost, or the 1,000eb second cost.
+- Cyberware weapons and secondary-weapon upgrades with Autofire. The shipped piston installs only in weapons, so with gating on they cannot Full Blast. A copy of the piston with its upgrade type set to cyberware should count for a cyberware weapon, since detection matches the flag (untested); a secondary-weapon upgrade cannot carry one. No core CPR cyberware or upgrade has Autofire.
 - Foundry v13.

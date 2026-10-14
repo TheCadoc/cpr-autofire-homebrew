@@ -8,7 +8,7 @@ Full Blast is the Adjustable Gas Piston by u/Infernox-Ratchet, from _Heavy Armor
 
 ## Full Blast
 
-When you attack with Autofire, a prompt asks whether to Full Blast. Every Autofire weapon gets the prompt.
+When you attack with Autofire, a prompt asks whether to Full Blast. Every Autofire weapon gets the prompt, unless the GM requires the Adjustable Gas Piston (see Settings).
 
 - **Standard Autofire** (default): the rules as written, 10 rounds.
 - **Full Blast**: spends twice the Autofire cost (20 rounds), hit or miss. It is unavailable when fewer rounds are loaded.
@@ -19,20 +19,21 @@ Full Blast damage adds 1 to each of the 2d6 before the Autofire multiplier. A di
 
 ![A Full Blast damage card: natural 5 and 4 become 6 + 5, times 4 for 44](docs/screenshots/2026-10-06-full-blast-damage-line.png)
 
-The damage dialog has a "Full Blast?" checkbox for Autofire damage. It is pre-checked when you roll from a Full Blast attack card.
+The damage dialog has a "Full Blast?" checkbox for Autofire damage (see Settings for when the GM requires the Adjustable Gas Piston). It is pre-checked when you roll from a Full Blast attack card.
 
 ## Settings
 
-Two world settings, both off by default and independent:
+Three world settings, all off by default and independent:
 
 - **Allow dice results to be modified above 6**: a natural 6 becomes 7, so the total is always (d1 + d2 + 2) x multiplier + other modifiers.
 - **Count modified dice towards criticals**: a die Full Blast raises to 6 or more counts toward the critical, as a natural 6 does. A natural 5 then counts, and so does a natural 6 raised to 7. Natural 6s always count.
+- **Require the Adjustable Gas Piston for Full Blast**: only a weapon with the Adjustable Gas Piston installed gets the prompt. Other Autofire weapons fire standard Autofire, and their damage dialog has no "Full Blast?" checkbox unless the roll started as Full Blast. The piston is in the **Autofire Homebrew Items** compendium; install it in a weapon like any upgrade. It takes no slot. Full Blast cards made before the setting was turned on still roll Full Blast damage.
 
 With Pneuma's Combat Tools, the second setting changes CPR's damage card (the +5 and "Critical Damage") but not Pneuma's critical injury button, which counts natural 6s only.
 
 ## Differences from the source
 
-- Full Blast works with every Autofire weapon. The source makes it an invented tech upgrade (Upgrade DV24, 1,000eb) installed on one weapon; this module has no upgrade, DV, or cost. Gating Full Blast per weapon is [issue #10](https://github.com/TheCadoc/cpr-autofire-homebrew/issues/10).
+- By default, Full Blast works with every Autofire weapon. The source makes it an invented tech upgrade (Upgrade DV24, 1,000eb) installed on one weapon. **Require the Adjustable Gas Piston for Full Blast** (off by default) enforces the upgrade, but not its DV or cost.
 - The source's alternate rule (roll 3d6 and drop the lowest) is not implemented.
 - **Allow dice results to be modified above 6** (off by default) departs from the source, which caps a raised die at 6.
 - **Count modified dice towards criticals** (off by default) goes beyond the source, which says nothing about critical injuries. With it off, the core rule applies: two natural 6s.
@@ -41,7 +42,7 @@ With Pneuma's Combat Tools, the second setting changes CPR's damage card (the +5
 
 Verified with Pneuma's Combat Tools 0.9.16. It is optional; nothing changes when it is not active.
 
-- Autofire attacks from Pneuma's token HUD, and sheet attacks Pneuma routes through its exchange, show the Full Blast prompt and spend the Full Blast cost.
+- Autofire attacks from Pneuma's token HUD, and sheet attacks Pneuma routes through its exchange, show the Full Blast prompt (subject to the Gas Piston setting) and spend the Full Blast cost.
 - Pneuma's damage button on a Full Blast attack rolls Full Blast damage. A click rolls at once; Shift-click opens CPR's damage dialog, which shows "Full Blast?" checked. (Before Pneuma 0.9.15 the two were the other way round.)
 - Pneuma's attack cards show "(Full Blast)".
 - Pneuma's HUD still disables Autofire below 10 rounds. The prompt disables Full Blast below 20.

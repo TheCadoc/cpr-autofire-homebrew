@@ -7,6 +7,7 @@ import {
 } from "./rules.js";
 import { MARKER_CLASS, MODULE_ID, t } from "./constants.js";
 import { takePneumaFullBlast } from "./pneuma.js";
+import { allowsFullBlast, hasGasPiston } from "./gating.js";
 
 const MOD_ID = `${MODULE_ID}-full-blast`;
 const CARD_TEMPLATE = `modules/${MODULE_ID}/templates/full-blast-attack-card.hbs`;
@@ -18,10 +19,11 @@ const DAMAGE_TYPE = "fullblast";
 const ITEM = "CONFIG.Item.documentClass.prototype";
 const ABOVE_SIX_SETTING = "modifiedAboveSix";
 const CRITICAL_SETTING = "modifiedCriticals";
+const GATING_SETTING = "requireGasPiston";
 
 const setting = (key) => game.settings.get(MODULE_ID, key);
 
-/** Damage rolls this module decorated. Only these get the dialog checkbox. */
+/** Damage rolls that get the "Full Blast?" checkbox: Full Blast already, or from a weapon that may Full Blast. */
 const damageRolls = new WeakSet();
 /** Our bulletConsumption replacements, so none is ever wrapped twice. */
 const doubled = new WeakSet();
@@ -41,6 +43,7 @@ export function register() {
   for (const [key, label] of [
     [ABOVE_SIX_SETTING, "AboveSix"],
     [CRITICAL_SETTING, "ModifiedCriticals"],
+    [GATING_SETTING, "RequireGasPiston"],
   ]) {
     game.settings.register(MODULE_ID, key, {
       name: `CPR_AUTOFIRE_HOMEBREW.Settings.${label}.Name`,
@@ -68,6 +71,16 @@ export function register() {
   Hooks.on("renderChatMessage", retargetDamageButton);
 }
 
+/** Whether this weapon may Full Blast under the "Require the Adjustable Gas Piston" setting. */
+function fullBlastAllowed(item) {
+  const gatingOn = setting(GATING_SETTING);
+  const upgrades =
+    gatingOn && typeof item?.getInstalledItems === "function"
+      ? item.getInstalledItems("itemUpgrade")
+      : [];
+  return allowsFullBlast(gatingOn, hasGasPiston(upgrades));
+}
+
 function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
   // Every damage roll takes any pending Pneuma click, so a stale one never carries over.
   const pneuma = type === "damage" && takePneumaFullBlast(this, actor);
@@ -80,11 +93,15 @@ function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
   if (
     type === "autofire" &&
     this.system.isRanged &&
-    typeof this.bulletConsumption === "function"
+    typeof this.bulletConsumption === "function" &&
+    fullBlastAllowed(this)
   ) {
     decorateAttack(roll, this);
   }
-  if (type === "damage") decorateDamage(roll, fullBlast);
+  // A roll that started as Full Blast keeps its checkbox; the attack was legal when made.
+  if (type === "damage") {
+    decorateDamage(roll, fullBlast, fullBlast || fullBlastAllowed(this));
+  }
   return roll;
 }
 
@@ -161,7 +178,7 @@ function wrapLoadMixins(wrapped, ...args) {
 }
 
 /** Adds the Full Blast bonus as one modifier when CPR computes damage, and shows it on the card. */
-function decorateDamage(roll, fullBlast) {
+function decorateDamage(roll, fullBlast, checkbox) {
   const baseTitle = roll.rollTitle;
   const baseCard = roll.rollCard;
   const fullBlastTitle = t("FullBlast.Title", { name: baseTitle });
@@ -196,7 +213,7 @@ function decorateDamage(roll, fullBlast) {
     }
     return isFullBlastCritical(this.faces, setting(ABOVE_SIX_SETTING), true);
   };
-  damageRolls.add(roll);
+  if (checkbox) damageRolls.add(roll);
 }
 
 /** Renders the card through the wrapper. Without CPR's card as a partial, keeps the native card. */
