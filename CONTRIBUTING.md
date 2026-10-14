@@ -19,7 +19,7 @@ After a JavaScript change, reload the browser (F5). After a `module.json` change
 - `npm run format` and `npm run format:check`: Prettier.
 - `npm run packs`: compiles `packs/_source/` into the LevelDB packs Foundry loads. Close the world first: Foundry locks a pack while the world is open. Run it again after any change under `packs/_source/`, then relaunch the world.
 
-CI runs `npm test`, `npm run lint`, and `npm run format:check` on every pull request. All three must pass.
+CI runs `npm run packs`, `npm test`, `npm run lint`, `npm run format:check`, and a build of `module.zip` on every pull request. All of them must pass.
 
 ## Pull requests
 

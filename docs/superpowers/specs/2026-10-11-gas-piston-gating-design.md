@@ -48,9 +48,9 @@ Rejected so far:
 ## 3. Environment
 
 - Foundry VTT v12 (verified 12.343). Cyberpunk RED Core v0.92.4. libWrapper required.
-- This repo at `main` d751974 (v0.3.0 with Optional Rules). The repo is public.
-- The README section "Differences from the source" that section 1 cites arrives with PR #11 (`chore/public-release-0.3.0`). It is not on `main` yet.
-- Pneuma's Combat Tools: facts were read at `main` 0.9.16 (`ca73a50`, tag `v0.9.16`). The workspace's Foundry install moved from 0.9.10 to 0.9.16 on 2026-10-13, and Full Blast was re-verified live against it; the module's verified Pneuma version moves to 0.9.16 in its own PR.
+- This repo at `main` 368119e (v0.3.0, with PRs #11, #12, and #13 merged). The repo is public.
+- The README section "Differences from the source" that section 1 cites came with PR #11.
+- Pneuma's Combat Tools: facts were read at `main` 0.9.16 (`ca73a50`, tag `v0.9.16`). The workspace's Foundry install moved from 0.9.10 to 0.9.16 on 2026-10-13, and Full Blast was re-verified live against it; the module's verified Pneuma version moved to 0.9.16 in PR #13.
 - CPR reference source: `foundry-cpr/reference/fvtt-cyberpunk-red-core/` at tag v0.92.4. Available; CPR paths in section 4 are relative to its `src/`.
 
 ## 4. Facts the design depends on
@@ -99,7 +99,7 @@ Verified in CPR v0.92.4 on 2026-10-13:
 | `scripts/gating.js` (new) | Pure: `allowsFullBlast(gatingOn, hasPiston)` and `hasGasPiston(upgrades)`, which takes plain objects. No Foundry globals, so it is unit-tested.                                                                                                                                |
 | `scripts/full-blast.js`   | Register the setting. Add `fullBlastAllowed(item)` and use it in the `wrapCreateRoll` eligibility check (fact 1) and, when a damage roll is created, to decide whether its dialog shows the "Full Blast?" checkbox (fact 5). A roll that started as Full Blast always gets it. |
 | `scripts/constants.js`    | `GAS_PISTON_FLAG = "gasPiston"`. The setting key stays in `full-blast.js` with the other setting keys.                                                                                                                                                                         |
-| `lang/en.json`            | Setting name and hint, compendium label.                                                                                                                                                                                                                                       |
+| `lang/en.json`            | Setting name and hint. The pack label stays literal in `module.json`; Foundry v12 does not localize it.                                                                                                                                                                        |
 | `test/gating.test.js`     | Unit tests (section 8).                                                                                                                                                                                                                                                        |
 
 `fullBlastAllowed(item)` reads `item.getInstalledItems("itemUpgrade")` (fact 7). In `wrapCreateRoll`, `this` is already the weapon. With gating off it skips the lookup.
@@ -119,11 +119,11 @@ Verified in CPR v0.92.4 on 2026-10-13:
 
 ## 7. Outstanding questions
 
-1. Decision 2: is "user settings" world scope (GM) or per-player? World is recommended.
-2. Decision 3: is a native upgrade item the right model, or is issue #10's checkbox preferred for simplicity? The data model supports the upgrade item (facts 8 to 10).
-3. Decision 7: should old Full Blast cards be blocked once gating is on?
-4. Decision 11: is a pack build step acceptable? Answered in part: the compiled pack should be ignored, not committed (section 6.3).
-5. Does Pneuma's HUD need to show anything different for a gated weapon? Today it disables Autofire below 10 rounds and knows nothing about Full Blast, which stays true.
+1. Decision 2: is "user settings" world scope (GM) or per-player? World is recommended. Decided 2026-10-13: world.
+2. Decision 3: is a native upgrade item the right model, or is issue #10's checkbox preferred for simplicity? The data model supports the upgrade item (facts 8 to 10). Decided 2026-10-13: the upgrade item.
+3. Decision 7: should old Full Blast cards be blocked once gating is on? Decided 2026-10-13: no; they still roll Full Blast damage (decision 7).
+4. Decision 11: is a pack build step acceptable? Answered in part: the compiled pack should be ignored, not committed (section 6.3). Decided 2026-10-13: yes; the compiled pack is gitignored and built in CI and the release.
+5. Does Pneuma's HUD need to show anything different for a gated weapon? Today it disables Autofire below 10 rounds and knows nothing about Full Blast, which stays true. Decided 2026-10-13: no change to Pneuma's HUD is needed.
 6. Permission and credit: the go-public spec plans to tell u/Infernox-Ratchet the rule is credited. Shipping the item itself in a compendium may merit asking first.
 
 ## 8. Testing and acceptance
@@ -157,4 +157,5 @@ Manual checklist (Foundry v12, CPR 0.92.4, libWrapper; Pneuma on for M5 and M6):
 - The source's other items (follow-up spec).
 - The alternate 3d6-drop-lowest rule.
 - Enforcing the DV24 invention check, the first cost, or the 1,000eb second cost.
+- Cyberware weapons and secondary-weapon upgrades with Autofire. The piston installs only in weapons, so with gating on they cannot Full Blast. No core CPR cyberware or upgrade has Autofire.
 - Foundry v13.

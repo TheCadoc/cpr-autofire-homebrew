@@ -19,7 +19,7 @@ Full Blast damage adds 1 to each of the 2d6 before the Autofire multiplier. A di
 
 ![A Full Blast damage card: natural 5 and 4 become 6 + 5, times 4 for 44](docs/screenshots/2026-10-06-full-blast-damage-line.png)
 
-The damage dialog has a "Full Blast?" checkbox for Autofire damage. It is pre-checked when you roll from a Full Blast attack card.
+The damage dialog has a "Full Blast?" checkbox for Autofire damage (see Settings for when the GM requires the Adjustable Gas Piston). It is pre-checked when you roll from a Full Blast attack card.
 
 ## Settings
 
@@ -42,7 +42,7 @@ With Pneuma's Combat Tools, the second setting changes CPR's damage card (the +5
 
 Verified with Pneuma's Combat Tools 0.9.16. It is optional; nothing changes when it is not active.
 
-- Autofire attacks from Pneuma's token HUD, and sheet attacks Pneuma routes through its exchange, show the Full Blast prompt and spend the Full Blast cost.
+- Autofire attacks from Pneuma's token HUD, and sheet attacks Pneuma routes through its exchange, show the Full Blast prompt (subject to the Gas Piston setting) and spend the Full Blast cost.
 - Pneuma's damage button on a Full Blast attack rolls Full Blast damage. A click rolls at once; Shift-click opens CPR's damage dialog, which shows "Full Blast?" checked. (Before Pneuma 0.9.15 the two were the other way round.)
 - Pneuma's attack cards show "(Full Blast)".
 - Pneuma's HUD still disables Autofire below 10 rounds. The prompt disables Full Blast below 20.
