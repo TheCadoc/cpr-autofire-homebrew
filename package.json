@@ -1,4 +1,5 @@
 {
+  "name": "cpr-autofire-homebrew",
   "private": true,
   "type": "module",
   "scripts": {
