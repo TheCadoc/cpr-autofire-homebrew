@@ -1,12 +1,12 @@
 # Contributing
 
-This module targets Foundry VTT v12 (verified 12.343) and Cyberpunk RED Core 0.92.4. It is plain ES modules with no build step.
+This module targets Foundry VTT v12 (verified 12.343) and Cyberpunk RED Core 0.92.4. It is plain ES modules. The only build step compiles the compendium packs (`npm run packs`).
 
 ## Setup
 
 1. Install Node 22.
 2. Clone this repo into your Foundry data folder as `Data/modules/cpr-autofire-homebrew`, or clone it elsewhere and link it there (Windows: `mklink /J`; macOS and Linux: `ln -s`). The folder must be named `cpr-autofire-homebrew`.
-3. Run `npm ci`.
+3. Run `npm ci`, then `npm run packs`. The compiled packs are not committed, so Foundry sees no compendium until you build it.
 4. In Foundry, install libWrapper, then enable libWrapper and this module in a Cyberpunk RED world.
 5. In Foundry Setup, lock this module (the lock icon under Add-on Modules). A locked package is never updated, so a release can't overwrite your clone.
 
@@ -17,6 +17,7 @@ After a JavaScript change, reload the browser (F5). After a `module.json` change
 - `npm test`: unit tests, with Node's test runner.
 - `npm run lint`: ESLint.
 - `npm run format` and `npm run format:check`: Prettier.
+- `npm run packs`: compiles `packs/_source/` into the LevelDB packs Foundry loads. Close the world first: Foundry locks a pack while the world is open. Run it again after any change under `packs/_source/`, then relaunch the world.
 
 CI runs `npm test`, `npm run lint`, and `npm run format:check` on every pull request. All three must pass.
 

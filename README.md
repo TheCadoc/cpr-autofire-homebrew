@@ -8,7 +8,7 @@ Full Blast is the Adjustable Gas Piston by u/Infernox-Ratchet, from _Heavy Armor
 
 ## Full Blast
 
-When you attack with Autofire, a prompt asks whether to Full Blast. Every Autofire weapon gets the prompt.
+When you attack with Autofire, a prompt asks whether to Full Blast. Every Autofire weapon gets the prompt, unless the GM requires the Adjustable Gas Piston (see Settings).
 
 - **Standard Autofire** (default): the rules as written, 10 rounds.
 - **Full Blast**: spends twice the Autofire cost (20 rounds), hit or miss. It is unavailable when fewer rounds are loaded.
@@ -23,16 +23,17 @@ The damage dialog has a "Full Blast?" checkbox for Autofire damage. It is pre-ch
 
 ## Settings
 
-Two world settings, both off by default and independent:
+Three world settings, all off by default and independent:
 
 - **Allow dice results to be modified above 6**: a natural 6 becomes 7, so the total is always (d1 + d2 + 2) x multiplier + other modifiers.
 - **Count modified dice towards criticals**: a die Full Blast raises to 6 or more counts toward the critical, as a natural 6 does. A natural 5 then counts, and so does a natural 6 raised to 7. Natural 6s always count.
+- **Require the Adjustable Gas Piston for Full Blast**: only a weapon with the Adjustable Gas Piston installed gets the prompt. Other Autofire weapons fire standard Autofire, and their damage dialog has no "Full Blast?" checkbox. The piston is in the **Autofire Homebrew Items** compendium; install it in a weapon like any upgrade. It takes no slot. Full Blast cards made before the setting was turned on still roll Full Blast damage.
 
 With Pneuma's Combat Tools, the second setting changes CPR's damage card (the +5 and "Critical Damage") but not Pneuma's critical injury button, which counts natural 6s only.
 
 ## Differences from the source
 
-- Full Blast works with every Autofire weapon. The source makes it an invented tech upgrade (Upgrade DV24, 1,000eb) installed on one weapon; this module has no upgrade, DV, or cost. Gating Full Blast per weapon is [issue #10](https://github.com/TheCadoc/cpr-autofire-homebrew/issues/10).
+- By default, Full Blast works with every Autofire weapon. The source makes it an invented tech upgrade (Upgrade DV24, 1,000eb) installed on one weapon. **Require the Adjustable Gas Piston for Full Blast** (off by default) enforces the upgrade, but not its DV or cost.
 - The source's alternate rule (roll 3d6 and drop the lowest) is not implemented.
 - **Allow dice results to be modified above 6** (off by default) departs from the source, which caps a raised die at 6.
 - **Count modified dice towards criticals** (off by default) goes beyond the source, which says nothing about critical injuries. With it off, the core rule applies: two natural 6s.

@@ -1029,3 +1029,12 @@ The body covers: closes #10; the setting and its default; the compendium and the
 
 - [ ] Wait for CI: `gh pr checks feat/gas-piston-gating --watch`. Expected: `check` passes, including the new `npm run packs` step.
 - [ ] After merge (Lukasz merges): pull `main` in the live clone, run `npm ci` and `npm run packs` there with the world closed, and publish `gh release create v0.4.0 --generate-notes`. Then run the go-public spec's 9.3 checks, and M9: install from the manifest on a clean world and open the compendium.
+
+---
+
+## Changes made during review (2026-10-14)
+
+- **Task 2:** the checkbox is decided when the damage roll is created, from `this` (the weapon): `decorateDamage(roll, fullBlast, fullBlast || fullBlastAllowed(this))` adds the roll to `damageRolls` only when the checkbox should show. `startedFullBlast` and the `app.item` check in `addDamageCheckbox` were dropped. `fullBlastAllowed` skips `getInstalledItems` while gating is off.
+- **Task 3:** `img` is Foundry's core `icons/svg/upgrade.svg`; CPR has no generic upgrade icon. The description says a raised die stops at 6 unless the GM turns on "Allow dice results to be modified above 6".
+- **Task 4:** `tools/build-packs.mjs` resolves paths from its own location and documents that a removed source folder leaves its compiled pack behind. `package.json` gained `"name": "cpr-autofire-homebrew"` so the lockfile name no longer follows the checkout folder.
+- **Task 5:** the zip excludes both `packs/_source` and `packs/_source/*`, and a release step fails if `unzip -Z1` lists anything under `packs/_source`.
