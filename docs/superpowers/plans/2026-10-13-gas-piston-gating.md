@@ -416,7 +416,7 @@ Create `packs/_source/autofire-homebrew-items/adjustable-gas-piston.json`. The d
   "_key": "!items!afhGasPiston0001",
   "name": "Adjustable Gas Piston",
   "type": "itemUpgrade",
-  "img": "systems/cyberpunk-red-core/icons/compendium/upgrades/upgrade.svg",
+  "img": "icons/svg/upgrade.svg",
   "system": {
     "type": "weapon",
     "size": 0,
@@ -988,7 +988,7 @@ async function cardDamage(cardId) {
 
 **Checks** (spec section 8; record each result)
 
-- [ ] **M8** Pack and item: `ours` exists; `T.piston.flags["cpr-autofire-homebrew"].gasPiston === true`; `T.piston.system.size === 0`; `T.piston.system.price.market === 1000`; the description shows in the item sheet (`T.piston.sheet.render(true)`). No validation error in the console (`browser_console_messages`, level error).
+- [ ] **M8** Pack and item: `ours` exists; `T.piston.flags["cpr-autofire-homebrew"].gasPiston === true`; `T.piston.system.size === 0`; `T.piston.system.price.market === 1000`; `(await fetch(T.piston.img)).ok === true`; the description shows in the item sheet (`T.piston.sheet.render(true)`). No validation error in the console (`browser_console_messages`, level error).
 - [ ] **M1** Gating off (`await game.settings.set("cpr-autofire-homebrew", "requireGasPiston", false)`), no piston installed: `await sheetAttack("standard")`. Expected: `prompt: true`, `spent: 10`.
 - [ ] **M10, part 1** Still gating off, no piston: `const old = await sheetAttack("fullBlast")`. Expected: `prompt: true`, `spent: 20`, `marker: true`. Keep `old.cardId`.
 - [ ] **M2** Gating on (`await game.settings.set("cpr-autofire-homebrew", "requireGasPiston", true)`), no piston: `const gated = await sheetAttack("fullBlast")`. Expected: `prompt: false`, `dialog.title` is "Assault Rifle" (no "(Full Blast)"), `spent: 10`, `marker: false`.

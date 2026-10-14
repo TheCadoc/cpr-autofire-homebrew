@@ -3,7 +3,7 @@
   "_key": "!items!afhGasPiston0001",
   "name": "Adjustable Gas Piston",
   "type": "itemUpgrade",
-  "img": "systems/cyberpunk-red-core/icons/compendium/upgrades/upgrade.svg",
+  "img": "icons/svg/upgrade.svg",
   "system": {
     "type": "weapon",
     "size": 0,
