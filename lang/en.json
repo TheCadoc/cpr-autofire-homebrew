@@ -20,6 +20,10 @@
       "ModifiedCriticals": {
         "Name": "Count modified dice towards criticals",
         "Hint": "Off: only natural 6s count toward a critical. On: a die Full Blast raises to 6 or more also counts, so a natural 5 counts."
+      },
+      "RequireGasPiston": {
+        "Name": "Require the Adjustable Gas Piston for Full Blast",
+        "Hint": "Off: every Autofire weapon can Full Blast. On: only a weapon with the Adjustable Gas Piston installed can; others fire standard Autofire. The piston is in the Autofire Homebrew Items compendium."
       }
     },
     "Errors": {

@@ -7,6 +7,7 @@ import {
 } from "./rules.js";
 import { MARKER_CLASS, MODULE_ID, t } from "./constants.js";
 import { takePneumaFullBlast } from "./pneuma.js";
+import { allowsFullBlast, hasGasPiston } from "./gating.js";
 
 const MOD_ID = `${MODULE_ID}-full-blast`;
 const CARD_TEMPLATE = `modules/${MODULE_ID}/templates/full-blast-attack-card.hbs`;
@@ -18,6 +19,7 @@ const DAMAGE_TYPE = "fullblast";
 const ITEM = "CONFIG.Item.documentClass.prototype";
 const ABOVE_SIX_SETTING = "modifiedAboveSix";
 const CRITICAL_SETTING = "modifiedCriticals";
+const GATING_SETTING = "requireGasPiston";
 
 const setting = (key) => game.settings.get(MODULE_ID, key);
 
@@ -25,6 +27,8 @@ const setting = (key) => game.settings.get(MODULE_ID, key);
 const damageRolls = new WeakSet();
 /** Our bulletConsumption replacements, so none is ever wrapped twice. */
 const doubled = new WeakSet();
+/** Damage rolls that started as Full Blast (from a Full Blast card or Pneuma exchange), so gating never hides their checkbox. */
+const startedFullBlast = new WeakSet();
 
 /** Wires Full Blast into Cyberpunk RED. Must run in the init hook. */
 export function register() {
@@ -41,6 +45,7 @@ export function register() {
   for (const [key, label] of [
     [ABOVE_SIX_SETTING, "AboveSix"],
     [CRITICAL_SETTING, "ModifiedCriticals"],
+    [GATING_SETTING, "RequireGasPiston"],
   ]) {
     game.settings.register(MODULE_ID, key, {
       name: `CPR_AUTOFIRE_HOMEBREW.Settings.${label}.Name`,
@@ -68,6 +73,15 @@ export function register() {
   Hooks.on("renderChatMessage", retargetDamageButton);
 }
 
+/** Whether this weapon may Full Blast under the "Require the Adjustable Gas Piston" setting. */
+function fullBlastAllowed(item) {
+  const upgrades =
+    typeof item?.getInstalledItems === "function"
+      ? item.getInstalledItems("itemUpgrade")
+      : [];
+  return allowsFullBlast(setting(GATING_SETTING), hasGasPiston(upgrades));
+}
+
 function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
   // Every damage roll takes any pending Pneuma click, so a stale one never carries over.
   const pneuma = type === "damage" && takePneumaFullBlast(this, actor);
@@ -80,7 +94,8 @@ function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
   if (
     type === "autofire" &&
     this.system.isRanged &&
-    typeof this.bulletConsumption === "function"
+    typeof this.bulletConsumption === "function" &&
+    fullBlastAllowed(this)
   ) {
     decorateAttack(roll, this);
   }
@@ -197,6 +212,7 @@ function decorateDamage(roll, fullBlast) {
     return isFullBlastCritical(this.faces, setting(ABOVE_SIX_SETTING), true);
   };
   damageRolls.add(roll);
+  if (fullBlast) startedFullBlast.add(roll);
 }
 
 /** Renders the card through the wrapper. Without CPR's card as a partial, keeps the native card. */
@@ -227,6 +243,8 @@ function insertDamageLine(line, options) {
 function addDamageCheckbox(app, html) {
   const roll = app.rollData;
   if (!damageRolls.has(roll) || !roll.isAutofire) return;
+  // A Full Blast card made before gating still rolls Full Blast damage, so its checkbox stays.
+  if (!startedFullBlast.has(roll) && !fullBlastAllowed(app.item)) return;
   const anchor = html
     .find('input[name="autofireMultiplier"]')
     .closest("li.dialog-item");
