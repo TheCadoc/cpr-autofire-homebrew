@@ -23,12 +23,10 @@ const GATING_SETTING = "requireGasPiston";
 
 const setting = (key) => game.settings.get(MODULE_ID, key);
 
-/** Damage rolls this module decorated. Only these get the dialog checkbox. */
+/** Damage rolls that get the "Full Blast?" checkbox: Full Blast already, or from a weapon that may Full Blast. */
 const damageRolls = new WeakSet();
 /** Our bulletConsumption replacements, so none is ever wrapped twice. */
 const doubled = new WeakSet();
-/** Damage rolls that started as Full Blast (from a Full Blast card or Pneuma exchange), so gating never hides their checkbox. */
-const startedFullBlast = new WeakSet();
 
 /** Wires Full Blast into Cyberpunk RED. Must run in the init hook. */
 export function register() {
@@ -99,7 +97,9 @@ function wrapCreateRoll(wrapped, type, actor, extraData, ...rest) {
   ) {
     decorateAttack(roll, this);
   }
-  if (type === "damage") decorateDamage(roll, fullBlast);
+  // A roll that started as Full Blast keeps its checkbox; the attack was legal when made.
+  if (type === "damage")
+    decorateDamage(roll, fullBlast, fullBlast || fullBlastAllowed(this));
   return roll;
 }
 
@@ -176,7 +176,7 @@ function wrapLoadMixins(wrapped, ...args) {
 }
 
 /** Adds the Full Blast bonus as one modifier when CPR computes damage, and shows it on the card. */
-function decorateDamage(roll, fullBlast) {
+function decorateDamage(roll, fullBlast, checkbox) {
   const baseTitle = roll.rollTitle;
   const baseCard = roll.rollCard;
   const fullBlastTitle = t("FullBlast.Title", { name: baseTitle });
@@ -211,8 +211,7 @@ function decorateDamage(roll, fullBlast) {
     }
     return isFullBlastCritical(this.faces, setting(ABOVE_SIX_SETTING), true);
   };
-  damageRolls.add(roll);
-  if (fullBlast) startedFullBlast.add(roll);
+  if (checkbox) damageRolls.add(roll);
 }
 
 /** Renders the card through the wrapper. Without CPR's card as a partial, keeps the native card. */
@@ -243,8 +242,6 @@ function insertDamageLine(line, options) {
 function addDamageCheckbox(app, html) {
   const roll = app.rollData;
   if (!damageRolls.has(roll) || !roll.isAutofire) return;
-  // A Full Blast card made before gating still rolls Full Blast damage, so its checkbox stays.
-  if (!startedFullBlast.has(roll) && !fullBlastAllowed(app.item)) return;
   const anchor = html
     .find('input[name="autofireMultiplier"]')
     .closest("li.dialog-item");
