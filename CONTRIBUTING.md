@@ -10,7 +10,7 @@ This module targets Foundry VTT v12 (verified 12.343) and Cyberpunk RED Core 0.9
 4. In Foundry, install libWrapper, then enable libWrapper and this module in a Cyberpunk RED world.
 5. In Foundry Setup, lock this module (the lock icon under Add-on Modules). A locked package is never updated, so a release can't overwrite your clone.
 
-After a JavaScript change, reload the browser (F5). After a `module.json` change, return to Setup and relaunch the world.
+After a JavaScript change, reload the browser (F5). After a `module.json` change, return to Setup and relaunch the world. After pulling a change under `packs/_source/`, run `npm run packs` with the world closed, then relaunch it.
 
 ## Commands
 
