@@ -157,5 +157,5 @@ Manual checklist (Foundry v12, CPR 0.92.4, libWrapper; Pneuma on for M5 and M6):
 - The source's other items (follow-up spec).
 - The alternate 3d6-drop-lowest rule.
 - Enforcing the DV24 invention check, the first cost, or the 1,000eb second cost.
-- Cyberware weapons and secondary-weapon upgrades with Autofire. The piston installs only in weapons, so with gating on they cannot Full Blast. No core CPR cyberware or upgrade has Autofire.
+- Cyberware weapons and secondary-weapon upgrades with Autofire. The shipped piston installs only in weapons, so with gating on they cannot Full Blast. A copy of the piston with its upgrade type set to cyberware should count for a cyberware weapon, since detection matches the flag (untested); a secondary-weapon upgrade cannot carry one. No core CPR cyberware or upgrade has Autofire.
 - Foundry v13.
