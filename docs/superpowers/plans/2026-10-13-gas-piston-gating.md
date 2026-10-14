@@ -613,7 +613,7 @@ with:
       - name: Build module.zip
         run: zip -r module.zip module.json LICENSE README.md scripts styles templates lang packs -x "packs/_source" "packs/_source/*"
       - name: Check that module.zip ships no pack sources
-        run: "! unzip -l module.zip | grep -q 'packs/_source'"
+        run: test -z "$(unzip -Z1 module.zip | grep 'packs/_source')"
 ```
 
 - [ ] **Step 2: Update G9**
