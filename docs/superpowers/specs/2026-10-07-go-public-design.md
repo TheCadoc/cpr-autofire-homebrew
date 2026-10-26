@@ -72,9 +72,9 @@ Rejected alternatives:
   3. Each Optional Rules setting that departs from the source is named, and its default is given.
 - **G7.** The README documents the settings the Optional Rules PR adds, using the names and defaults in its merged code.
 - **G8.** An anonymous GET of the manifest URL returns the latest release's `module.json`. Its `version` equals the release tag without the `v`, and its `download` is that release's `module.zip`.
-- **G9.** `module.zip` has `module.json` at its root and contains only `module.json`, `LICENSE`, `README.md`, `scripts/`, `styles/`, `templates/`, and `lang/`.
+- **G9.** `module.zip` has `module.json` at its root and contains only `module.json`, `LICENSE`, `README.md`, `scripts/`, `styles/`, `templates/`, `lang/`, and, from 0.4.0, the compiled `packs/` without `packs/_source/`.
 - **G10.** The release workflow fails, and attaches nothing, when the tag does not equal `v` + `module.json` `version`.
-- **G11.** CI runs `npm test`, `npm run lint`, and `npm run format:check` on every pull request and every push to `main`. A ruleset on `main` requires it to pass.
+- **G11.** CI runs `npm test`, `npm run lint`, and `npm run format:check` on every pull request and every push to `main`. A ruleset on `main` requires it to pass. From 0.4.0 it also compiles the packs and builds `module.zip`.
 - **G12.** A fresh clone of the module repo on its own, outside the workspace, passes `npm ci`, `npm test`, `npm run lint`, and `npm run format:check`.
 - **G13.** The workspace's `npm run lint` and `npm run format:check` still cover the module and still pass.
 - **G14.** Nothing in this work edits `scripts/`, `styles/`, `templates/`, or `lang/`. Those belong to feature PRs.

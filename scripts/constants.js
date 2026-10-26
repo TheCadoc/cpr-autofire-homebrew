@@ -8,3 +8,6 @@ export const MARKER_CLASS = `${MODULE_ID}-full-blast`;
 /** Localizes `CPR_AUTOFIRE_HOMEBREW.<key>` with `data` formatted in. */
 export const t = (key, data) =>
   game.i18n.format(`CPR_AUTOFIRE_HOMEBREW.${key}`, data);
+
+/** Flag key under `flags["cpr-autofire-homebrew"]` that marks an upgrade as the Adjustable Gas Piston. */
+export const GAS_PISTON_FLAG = "gasPiston";

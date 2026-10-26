@@ -2,7 +2,7 @@
   "id": "cpr-autofire-homebrew",
   "title": "Autofire Homebrew for Cyberpunk RED",
   "description": "Homebrew Autofire rules for Cyberpunk RED. Full Blast, adapted from Infernox-Ratchet's Adjustable Gas Piston: spend double ammunition to add 1 to each damage die (max 6) before the Autofire multiplier.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "compatibility": { "minimum": "12", "verified": "12.343", "maximum": "12" },
   "authors": [
     { "name": "Lukasz Dobbek", "url": "https://github.com/TheCadoc" }
@@ -10,6 +10,15 @@
   "esmodules": ["scripts/main.js"],
   "styles": ["styles/full-blast-prompt.css"],
   "languages": [{ "lang": "en", "name": "English", "path": "lang/en.json" }],
+  "packs": [
+    {
+      "name": "autofire-homebrew-items",
+      "label": "Autofire Homebrew Items",
+      "path": "packs/autofire-homebrew-items",
+      "type": "Item",
+      "system": "cyberpunk-red-core"
+    }
+  ],
   "relationships": {
     "systems": [
       {

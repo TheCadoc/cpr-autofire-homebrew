@@ -17,10 +17,14 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
+          cache: npm
+      - run: npm ci
       - name: Check the tag and pin the download URL
         run: node .github/scripts/stamp-manifest.mjs
-      - name: Build module.zip
-        run: zip -r module.zip module.json LICENSE README.md scripts styles templates lang
+      - name: Compile the compendium packs
+        run: npm run packs
+      - name: Build and check module.zip
+        run: bash .github/scripts/build-zip.sh
       - name: Attach module.json and module.zip to the release
         run: gh release upload "$GITHUB_REF_NAME" module.json module.zip --clobber
         env:
